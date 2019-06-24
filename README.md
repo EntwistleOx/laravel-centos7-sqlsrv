@@ -111,10 +111,13 @@ $| php -m
 
 ## SQL Server
 
-Se indica a SELinux que permita conectar a apache a una BBDD a traves de SELinux:
+Se indica a SELinux que permita conectar a apache a una BBDD en CentOS:
 
 ```
+$| sudo service httpd stop
+$| sudo setsebool -P httpd_can_network_connect 1
 $| sudo setsebool -P httpd_can_network_connect_db 1
+$| sudo service httpd start 
 ```
 
 Instala driver ODBC y el CLI de SQLServer:
@@ -231,6 +234,8 @@ $| chmod -R 775 /var/www/html/nombreproyecto
 $| chown -R apache.apache /var/www/html/nombreproyecto
 $| chmod -R 775 /var/www/html/nombreproyecto/storage/  
 $| chmod -R 775 /var/www/html/nombreproyecto/bootstrap/cache
+$| chcon -R -t httpd_sys_rw_content_t /var/www/html/testapp/storage/
+$| chcon -R -t httpd_sys_rw_content_t /var/www/html/testapp/bootstrap/cache
 ```
 
 Ahora se debe abrir y modificar el archivo de configuracion de Apache:
@@ -268,12 +273,6 @@ Por esta otra:
    AllowOverride All
    Require all granted
 </Directory>
-```
-
-Se desactiva SELinux. [TODO: existe otro metodo mas seguro]
-
-```
-$| sudo setenforce 0 
 ```
 
 Se reinicia Apache para que los cambios tengan efecto:
