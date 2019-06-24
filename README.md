@@ -7,13 +7,13 @@ Guia rapida para instalar Laravel 5.8 en CentOS 7, utilizando Apache, PHP 7.2. y
 Limpia el cache de Yum:
 
 ```
-$ sudo yum clean all
+$| sudo yum clean all
 ```
 
 Actualiza los paqueques del sistema:
 
 ```
-$ sudo yum -y update
+$| sudo yum -y update
 ```
 
 ## Apache
@@ -21,7 +21,7 @@ $ sudo yum -y update
 Instala Apache:
 
 ```
-$ sudo yum -y install httpd
+$| sudo yum -y install httpd
 ```
 
 Inicia Apache:
