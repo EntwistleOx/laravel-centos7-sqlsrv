@@ -177,13 +177,13 @@ Pegamos el siguiente codigo:
 Ejecutamos el script:
 
 ```
-php connect.php
+$| php connect.php
 ```
 
 Resultado:
 
 ```
-Conectado!
+$| Conectado!
 ```
 
 ## Composer
