@@ -5,7 +5,7 @@ Guia rapida para instalar Laravel 5.8 en CentOS 7, utilizando Apache, PHP 7.2. y
 Pre-requisitos:
 - Maquina local con cliente SSH instalado. (Putty por ejemplo)
 - VPS con CentOS 7 corriendo.
-- Usuario no root con privilegios sudo, por motivos de seguridad.
+- Usuario no root con privilegios sudo. (Por seguridad)
 
 ## SSH
 
@@ -27,7 +27,7 @@ $| sudo yum -y update
 
 ## Herramientas
 
-Instalamos algunas herramientas necesarias durante la instalacion
+Instalamos algunas herramientas necesarias durante la instalacion y desarrollo:
 
 ```
 $| sudo yum -y install wget vim net-tools unzip git 
@@ -59,7 +59,7 @@ Revisamos el estado del servicio:
 $| sudo systemctl status httpd
 ```
 
-Debe aparecer asi:
+Resultado:
 
 ```
 Active: active (running) 
@@ -80,7 +80,7 @@ $| yum install -y php php-pdo php-xml php-pear php-devel php-common php-bcmath p
 $| exit
 ```
 
-Actualiza GCC para compilar los drivers PHP con PECL y PHP 7.2.
+Actualiza GCC para compilar los drivers PHP con PECL y PHP 7.2:
 
 ```
 $| sudo yum install -y centos-release-scl
@@ -95,7 +95,7 @@ Se verifica la version de php instalada:
 $| php -v
 ```
 
-El output:
+Resultado:
 
 ```
 PHP 7.2.19 (cli) (built: May 29 2019 11:04:13) ( NTS )
@@ -103,7 +103,7 @@ Copyright (c) 1997-2018 The PHP Group
 Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
 ```
 
-Para revisar los modulos php instalados
+Para revisar los modulos php instalados:
 
 ```
 $| php -m
@@ -146,7 +146,7 @@ $| echo extension=sqlsrv.so >> `php --ini | grep "Scan for additional .ini files
 $| exit
  ```
 
-Verificamos la instalacion creando una base de datos de prueba utilizando la consola sqlcmd, ojo en los accesos 
+Verificamos la instalacion creando una base de datos de prueba utilizando la consola sqlcmd, ojo con los datos de host y password:
 
 ```
 $| sqlcmd -S tu_host -U sa -P tu_password -Q "CREATE DATABASE tu_base_datos_prueba;"
@@ -180,7 +180,7 @@ Ejecutamos el script:
 php connect.php
 ```
 
-El resultado debe ser:
+Resultado:
 
 ```
 Conectado!
@@ -201,7 +201,7 @@ Verificar instalacion de Composer:
 $| composer -v
 ```
 
-El output:
+Resultado:
 
 ```
    ______
@@ -224,24 +224,39 @@ $| cd /var/www/html/
 Ahora se crea el proyecto laravel mediante composer create-project, el ultimo parametro indica el nombre del proyecto:
  
 ```
-$| composer create-project --prefer-dist laravel/laravel nombreproyecto
+$| sudo composer create-project --prefer-dist laravel/laravel nombreproyecto
 ```
  
-Se modifican los permisos de ejecucion y lectura de las carpetas storage y bootstrap/cache. Si no se modifican laravel no corre:
+Se modifican los permisos del proyecto:
+
+```
+$| sudo chmod -R 755 /var/www/html/nombreproyecto
+```
+
+Se asigna como dueño del directorio a Apache:
+
+```
+$| sudo chown -R apache.apache /var/www/html/nombreproyecto
+```
+
+Verificar que carpetas storage y bootstrap/cache tengan permiso 755, si no es asi correr:
  
 ```
-$| chmod -R 775 /var/www/html/nombreproyecto
-$| chown -R apache.apache /var/www/html/nombreproyecto
-$| chmod -R 775 /var/www/html/nombreproyecto/storage/  
-$| chmod -R 775 /var/www/html/nombreproyecto/bootstrap/cache
-$| chcon -R -t httpd_sys_rw_content_t /var/www/html/testapp/storage/
-$| chcon -R -t httpd_sys_rw_content_t /var/www/html/testapp/bootstrap/cache
+$| sudo chmod -R 775 /var/www/html/nombreproyecto/storage/  
+$| sudo chmod -R 775 /var/www/html/nombreproyecto/bootstrap/cache
+```
+
+Le indicamos a SELinux que Apache puede escribir es las rutas definidas:
+
+```
+$| sudo chcon -R -t httpd_sys_rw_content_t /var/www/html/testapp/storage/
+$| sudo chcon -R -t httpd_sys_rw_content_t /var/www/html/testapp/bootstrap/cache
 ```
 
 Ahora se debe abrir y modificar el archivo de configuracion de Apache:
 
 ```
-$| vi /etc/httpd/conf/httpd.conf
+$| sudo vi /etc/httpd/conf/httpd.conf
 ```
 
 Primero se indica que la raiz del proyecto estara dentro de la carpeta public del proyecto laravel, se modifica la siguiente linea:
@@ -286,13 +301,13 @@ $| sudo systemctl restart httpd
 Se habilita puerto 80 en el firewall:
 
 ```
-$| firewall-cmd --permanent --zone=public --add-port=80/tcp
+$| sudo firewall-cmd --permanent --zone=public --add-port=80/tcp
 ```
 
 Luego se reinicia el servicio:
 
 ```
-$| firewall-cmd --reload
+$| sudo firewall-cmd --reload
 ```
 
 Ahora ingresando la IP del servidor en el browser, es posible visualizar la pagina de inicio de Laravel.
