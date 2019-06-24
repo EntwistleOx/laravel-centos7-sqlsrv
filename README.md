@@ -175,7 +175,7 @@ Ahora se debe abrir y modificar el archivo de configuracion de Apache:
 $| vi /etc/httpd/conf/httpd.conf
 ```
 
-Primero se indica que la raiz del proyecto estara dentro de la carpeta public del proyecto laravel, se modifica la siguiete linea:
+Primero se indica que la raiz del proyecto estara dentro de la carpeta public del proyecto laravel, se modifica la siguiente linea:
 
 ```
 DocumentRoot "/var/www/html"
@@ -186,7 +186,7 @@ Por esta otra:
 DocumentRoot "/var/www/html/nombreproyecto/public"
 ```
 
-Luego se habilita acceso al directorio "/var/www/html", agregando AllowOverride All, se modifica la siguiete linea:
+Luego se habilita el acceso al directorio "/var/www/html", se modifica la siguiente linea:
 
 ```
 <Directory "/var/www/http"> 
@@ -206,4 +206,25 @@ Por esta otra:
 </Directory>
 ```
 
+Se desactiva SELinux. [TODO: existe otro metodo mas seguro]
 
+```
+$| sudo setenforce 0 
+```
+
+Se reinicia Apache para que los cambios tengan efecto:
+
+```
+$| sudo systemctl restart httpd
+```
+
+## Firewall
+
+Se habilita puerto 80 en el firewall, luego se reinicia el servicio:
+
+```
+$| firewall-cmd --permanent --zone=public --add-port=80/tcp
+$| firewall-cmd --reload
+```
+
+Ahora ingresando la IP del servidor en el browser, es posible visualizar la pagina de inicio de Laravel.
