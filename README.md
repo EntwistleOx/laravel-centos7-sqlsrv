@@ -27,19 +27,19 @@ $| sudo yum -y install httpd
 Inicia Apache:
 
 ```
-$ sudo systemctl start httpd
+$| sudo systemctl start httpd
 ```
 
 Habilita ejecución de Apache al inicio del sistema:
 
 ```
-$ sudo systemctl enable httpd
+$| sudo systemctl enable httpd
 ```
 
 Revisa el estado del servicio:
 
 ```
-$ sudo systemctl status httpd
+$| sudo systemctl status httpd
 ```
 
 ## Herramientas
@@ -47,7 +47,7 @@ $ sudo systemctl status httpd
 Algunas herramientas necesarias:
 
 ```
-$ sudo yum -y install wget vim net-tools unzip git 
+$| sudo yum -y install wget vim net-tools unzip git 
 ```
 
 ## PHP 7.2
@@ -55,51 +55,68 @@ $ sudo yum -y install wget vim net-tools unzip git
 Instala PHP y modulos requeridos por Laravel y SQLServer:
 
 ```
-$ wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-$ wget http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-$ rpm -Uvh remi-release-7.rpm epel-release-latest-7.noarch.rpm
-$ yum install -y yum-utils
-$ yum-config-manager --enable remi-php72
-$ yum install -y php php-pdo php-xml php-pear php-devel php-common php-bcmath php-mbstring php-gd php-cli php-fpm re2c gcc-c++ gcc
+$| sudo su
+$| wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+$| wget http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+$| rpm -Uvh remi-release-7.rpm epel-release-latest-7.noarch.rpm
+$| yum install -y yum-utils
+$| yum-config-manager --enable remi-php72
+$| yum install -y php php-pdo php-xml php-pear php-devel php-common php-bcmath php-mbstring php-gd php-cli php-fpm re2c gcc-c++ gcc
+$| exit
 ```
 
 Actualiza GCC para compilar los drivers PHP con PECL y PHP 7.2.
 
 ```
-$ yum install -y centos-release-scl
-$ yum-config-manager --enable rhel-server-rhscl-7-rpms
-$ yum install -y devtoolset-7
-$ scl enable devtoolset-7 bash
+$| sudo yum install -y centos-release-scl
+$| sudo yum-config-manager --enable rhel-server-rhscl-7-rpms
+$| sudo yum install -y devtoolset-7
+$| scl enable devtoolset-7 bash
 ```
 
+Se verifica la version de php instalada:
+
+```
+$| php -v
+```
+
+Debe decir algo similar a:
+
+>PHP 7.2.19 (cli) (built: May 29 2019 11:04:13) ( NTS )
+Copyright (c) 1997-2018 The PHP Group
+Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
+
+>
+>
 ## SQL Server
 
 Se indica a SELinux que permita conectar a apache a una BBDD a traves de SELinux:
 
 ```
-$ setsebool -P httpd_can_network_connect_db 1
+$| sudo setsebool -P httpd_can_network_connect_db 1
 ```
 
 Instala driver ODBC y el CLI de SQLServer:
 
 ```
-$ curl https://packages.microsoft.com/config/rhel/7/prod.repo > /etc/yum.repos.d/mssql-tools.repo
-$ ACCEPT_EULA=Y yum install -y msodbcsql17 mssql-tools
-$ yum remove unixODBC-utf16 unixODBC-utf16-devel #to avoid conflicts
-$ ACCEPT_EULA=Y yum install -y msodbcsql17 mssql-tools
-$ echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
-$ echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
-$ source ~/.bashrc
-$ yum install -y unixODBC-devel
+$| sudo su
+$| curl https://packages.microsoft.com/config/rhel/7/prod.repo > /etc/yum.repos.d/mssql-tools.repo
+$| ACCEPT_EULA=Y yum install -y msodbcsql17 mssql-tools
+$| yum remove unixODBC-utf16 unixODBC-utf16-devel #to avoid conflicts
+$| ACCEPT_EULA=Y yum install -y msodbcsql17 mssql-tools
+$| echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
+$| echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
+$| source ~/.bashrc
+$| yum install -y unixODBC-devel
  ```
  
 Instala driver SQLServer para PHP:
  
  ```
-$ pecl install sqlsrv
-$ pecl install pdo_sqlsrv
-$ echo extension=pdo_sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-pdo_sqlsrv.ini
-$ echo extension=sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/20-sqlsrv.ini
+$| pecl install sqlsrv
+$| pecl install pdo_sqlsrv
+$| echo extension=pdo_sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-pdo_sqlsrv.ini
+$| echo extension=sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/20-sqlsrv.ini
  ```
 
 ## Composer
@@ -107,8 +124,7 @@ $ echo extension=sqlsrv.so >> `php --ini | grep "Scan for additional .ini files"
 Descarga e instala composer mediante curl. Luego se habilita que el comando composer se ejecute de forma global:
 
 ```
-$ sudo curl -sS https://getcomposer.org/installer | php
-$ mv composer.phar /usr/bin/composer
-chmod +x /usr/bin/composer
+$| sudo curl -sS https://getcomposer.org/installer | php
+$| mv composer.phar /usr/bin/composer
 ```
 
