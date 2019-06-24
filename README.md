@@ -80,9 +80,13 @@ Se verifica la version de php instalada:
 $| php -v
 ```
 
-Debe responder similar a:
+El output:
 
-> PHP 7.2.19 (cli) (built: May 29 2019 11:04:13) ( NTS )
+```
+>PHP 7.2.19 (cli) (built: May 29 2019 11:04:13) ( NTS )
+>Copyright (c) 1997-2018 The PHP Group
+>Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
+```
 
 ## SQL Server
 
