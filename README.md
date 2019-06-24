@@ -249,8 +249,8 @@ $| sudo chmod -R 775 /var/www/html/nombreproyecto/bootstrap/cache
 Le indicamos a SELinux que Apache puede escribir es las rutas definidas:
 
 ```
-$| sudo chcon -R -t httpd_sys_rw_content_t /var/www/html/testapp/storage/
-$| sudo chcon -R -t httpd_sys_rw_content_t /var/www/html/testapp/bootstrap/cache
+$| sudo chcon -R -t httpd_sys_rw_content_t /var/www/html/nombreproyecto/storage/
+$| sudo chcon -R -t httpd_sys_rw_content_t /var/www/html/nombreproyecto/bootstrap/cache
 ```
 
 Ahora se debe abrir y modificar el archivo de configuracion de Apache:
