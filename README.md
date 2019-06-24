@@ -175,12 +175,35 @@ Ahora se debe abrir y modificar el archivo de configuracion de Apache:
 $| vi /etc/httpd/conf/httpd.conf
 ```
 
-Primero se indica que la raiz del proyecto estara dentro de la carpeta public del proyecto laravel, se cambia la siguiete linea:
+Primero se indica que la raiz del proyecto estara dentro de la carpeta public del proyecto laravel, se modifica la siguiete linea:
 
->DocumentRoot "/var/www/html"
+```
+DocumentRoot "/var/www/html"
+```
+
+Por esta otra:
+```
+DocumentRoot "/var/www/html/nombreproyecto/public"
+```
+
+Luego se habilita acceso al directorio "/var/www/html", agregando AllowOverride All, se modifica la siguiete linea:
+
+```
+<Directory "/var/www/http"> 
+   Options Indexes FollowSymLinks
+   AllowOverride None
+   Require all granted
+</Directory>
+```
 
 Por esta otra:
 
->DocumentRoot "/var/www/html/nombreproyecto/public"
- 
- 
+```
+<Directory "/var/www/http"> 
+   Options Indexes FollowSymLinks
+   AllowOverride All
+   Require all granted
+</Directory>
+```
+
+
