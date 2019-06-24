@@ -2,52 +2,67 @@
 
 Guia rapida para instalar Laravel 5.8 en CentOS 7, utilizando Apache, PHP 7.2. y driver de SQLServer.
 
+Pre-requisitos:
+- Maquina local con cliente SSH instalado. (Putty por ejemplo)
+- VPS con CentOS 7 corriendo.
+- Usuario no root con privilegios sudo, por motivos de seguridad.
+
+## SSH
+
+Se ingresa al servidor vía SSH.
+
 ## Yum
 
-Limpia el cache de Yum:
+Una vez dentro del servidor limpiamos el cache de Yum:
 
 ```
 $| sudo yum clean all
 ```
 
-Actualiza los paqueques del sistema:
+Actualizamos los paqueques del sistema:
 
 ```
 $| sudo yum -y update
 ```
 
+## Herramientas
+
+Instalamos algunas herramientas necesarias durante la instalacion
+
+```
+$| sudo yum -y install wget vim net-tools unzip git 
+```
+
 ## Apache
 
-Instala Apache:
+Instalamos Apache:
 
 ```
 $| sudo yum -y install httpd
 ```
 
-Inicia Apache:
+Iniciamos Apache:
 
 ```
 $| sudo systemctl start httpd
 ```
 
-Habilita ejecución de Apache al inicio del sistema:
+Habilitamos ejecución de Apache al inicio del sistema:
 
 ```
 $| sudo systemctl enable httpd
 ```
 
-Revisa el estado del servicio:
+Revisamos el estado del servicio:
 
 ```
 $| sudo systemctl status httpd
 ```
 
-## Herramientas
-
-Algunas herramientas necesarias:
+Debe aparecer asi:
 
 ```
-$| sudo yum -y install wget vim net-tools unzip git 
+Active: active (running) 
 ```
 
 ## PHP 7.2
@@ -88,6 +103,12 @@ Copyright (c) 1997-2018 The PHP Group
 Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
 ```
 
+Para revisar los modulos php instalados
+
+```
+$| php -m
+```
+
 ## SQL Server
 
 Se indica a SELinux que permita conectar a apache a una BBDD a traves de SELinux:
@@ -102,22 +123,65 @@ Instala driver ODBC y el CLI de SQLServer:
 $| sudo su
 $| curl https://packages.microsoft.com/config/rhel/7/prod.repo > /etc/yum.repos.d/mssql-tools.repo
 $| ACCEPT_EULA=Y yum install -y msodbcsql17 mssql-tools
-$| yum remove unixODBC-utf16 unixODBC-utf16-devel #to avoid conflicts
-$| ACCEPT_EULA=Y yum install -y msodbcsql17 mssql-tools
+$| exit
+$| sudo remove unixODBC-utf16 unixODBC-utf16-devel #no es necesario en una instalacion fresca de CentOS
+$| sudo ACCEPT_EULA=Y yum install -y msodbcsql17 mssql-tools
 $| echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
 $| echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
 $| source ~/.bashrc
-$| yum install -y unixODBC-devel
+$| sudo yum install -y unixODBC-devel
  ```
  
 Instala driver SQLServer para PHP:
  
  ```
-$| pecl install sqlsrv
-$| pecl install pdo_sqlsrv
+$| sudo pecl install sqlsrv
+$| sudo pecl install pdo_sqlsrv
+$| sudo su
 $| echo extension=pdo_sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-pdo_sqlsrv.ini
 $| echo extension=sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/20-sqlsrv.ini
+$| exit
  ```
+
+Verificamos la instalacion creando una base de datos de prueba utilizando la consola sqlcmd, ojo en los accesos 
+
+```
+$| sqlcmd -S tu_host -U sa -P tu_password -Q "CREATE DATABASE tu_base_datos_prueba;"
+```
+
+Luego creamos un archivo php de prueba que conecte al servidor sql:
+
+```
+$| vi /var/www/html/connect.php
+```
+
+Pegamos el siguiente codigo:
+
+```php
+<?php
+    $serverName = "tu_host";
+    $connectionOptions = array(
+        "Database" => "tu_base_datos_prueba",
+        "Uid" => "sa",
+        "PWD" => "tu_password"
+    );
+    $conn = sqlsrv_connect($serverName, $connectionOptions);
+    if($conn)
+        echo "Conectado!"
+?>
+```
+
+Ejecutamos el script:
+
+```
+php connect.php
+```
+
+El resultado debe ser:
+
+```
+Conectado!
+```
 
 ## Composer
 
@@ -220,10 +284,15 @@ $| sudo systemctl restart httpd
 
 ## Firewall
 
-Se habilita puerto 80 en el firewall, luego se reinicia el servicio:
+Se habilita puerto 80 en el firewall:
 
 ```
 $| firewall-cmd --permanent --zone=public --add-port=80/tcp
+```
+
+Luego se reinicia el servicio:
+
+```
 $| firewall-cmd --reload
 ```
 
