@@ -312,6 +312,8 @@ $| sudo firewall-cmd --reload
 
 Ahora ingresando la IP del servidor en el browser, es posible visualizar la pagina de inicio de Laravel.
 
+![alt text](http://i66.tinypic.com/280195l.png)
+
 ______
  #### Fuentes:
 - [Microsoft](https://www.microsoft.com/en-us/sql-server/developer-get-started/php/rhel)
