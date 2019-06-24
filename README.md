@@ -80,14 +80,12 @@ Se verifica la version de php instalada:
 $| php -v
 ```
 
-Debe decir algo similar a:
+Debe responder similar a:
 
->PHP 7.2.19 (cli) (built: May 29 2019 11:04:13) ( NTS )
-Copyright (c) 1997-2018 The PHP Group
-Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
+> PHP 7.2.19 (cli) (built: May 29 2019 11:04:13) ( NTS )
+> Copyright (c) 1997-2018 The PHP Group
+> Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
 
->
->
 ## SQL Server
 
 Se indica a SELinux que permita conectar a apache a una BBDD a traves de SELinux:
@@ -128,3 +126,17 @@ $| sudo curl -sS https://getcomposer.org/installer | php
 $| mv composer.phar /usr/bin/composer
 ```
 
+Verificar instalacion de Composer:
+
+```
+$| composer -v
+```
+
+El output seria:
+>   ______
+>  / ____/___  ____ ___  ____  ____  ________  _____
+> / /   / __ \/ __ `__ \/ __ \/ __ \/ ___/ _ \/ ___/
+>/ /___/ /_/ / / / / / / /_/ / /_/ (__  )  __/ /
+>\____/\____/_/ /_/ /_/ .___/\____/____/\___/_/
+>                    /_/
+>Composer version 1.8.6 2019-06-11 15:03:05
