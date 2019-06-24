@@ -83,9 +83,9 @@ $| php -v
 El output:
 
 ```
->PHP 7.2.19 (cli) (built: May 29 2019 11:04:13) ( NTS )
->Copyright (c) 1997-2018 The PHP Group
->Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
+PHP 7.2.19 (cli) (built: May 29 2019 11:04:13) ( NTS )
+Copyright (c) 1997-2018 The PHP Group
+Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
 ```
 
 ## SQL Server
@@ -134,7 +134,7 @@ Verificar instalacion de Composer:
 $| composer -v
 ```
 
-El output seria:
+El output:
 
 ```
    ______
@@ -154,7 +154,33 @@ Se instala en la ruta "/var/www/html/":
 ```
 $| cd /var/www/html/
 ```
+Ahora se crea el proyecto laravel mediante composer create-project, el ultimo parametro indica el nombre del proyecto:
+ 
+```
+$| composer create-project --prefer-dist laravel/laravel nombreproyecto
+```
+ 
+Se modifican los permisos de ejecucion y lectura de las carpetas storage y bootstrap/cache. Si no se modifican laravel no corre:
+ 
+```
+$| chmod -R 775 /var/www/html/nombreproyecto
+$| chown -R apache.apache /var/www/html/nombreproyecto
+$| chmod -R 775 /var/www/html/nombreproyecto/storage/  
+$| chmod -R 775 /var/www/html/nombreproyecto/bootstrap/cache
+```
 
+Ahora se debe abrir y modificar el archivo de configuracion de Apache:
 
+```
+$| vi /etc/httpd/conf/httpd.conf
+```
+
+Primero se indica que la raiz del proyecto estara dentro de la carpeta public del proyecto laravel, se cambia la siguiete linea:
+
+>DocumentRoot "/var/www/html"
+
+Por esta otra:
+
+>DocumentRoot "/var/www/html/nombreproyecto/public"
  
  
